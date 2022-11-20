@@ -5,48 +5,35 @@ use BaseClass;
 
 class Component extends BaseClass implements ComponentInterface {
   private static $types = ['cpu', 'mobo', 'ram', 'disc', 'gpu', 'psu', 'case', 'cooler', 'fan'];
-  private const DEFAULT_AMOUNT = 1;
   protected string $type;
   protected string $name;
-  protected int $amount;
 
-  private function __construct($type, $name, $amount) {
-    $this->_set($type, $name, $amount);
+  private function __construct() {}
+
+  public static function create($type, $name) {
+    if (! self::_validate($type)) return null;
+    $computer = new self;
+    $computer->_set($type, $name);
+    return $computer;
   }
 
-  public static function create($type, $name, $amount = self::DEFAULT_AMOUNT) {
-    if (! self::_validate($type, $amount)) return null;
-    return new self($type, $name, $amount);
-  }
-
-  public function update($type, $name, $amount = self::DEFAULT_AMOUNT) {
-    if (! self::_validate($type, $amount)) return false;
-    $this->_set($type, $name, $amount);
+  public function update($type, $name) {
+    if (! self::_validate($type)) return false;
+    $this->_set($type, $name);
     return true;
   }
 
-  // public function show() {
-  //   echo $this->type.': '.$this->name;
-  //   if ($this->amount > 1) {
-  //     echo " (x{$this->amount})";
-  //   }
-  //   echo "\n";
-  // }
-
   public function show() {
-    echo $this->__toString();
+    echo $this;
+    return $this;
   }
 
   public function __toString() {
-    $str = $this->type.': '.$this->name;
-    if ($this->amount > 1) {
-      $str .= " (x{$this->amount})";
-    }
-    return $str."\n";
+    return $this->type.': '.$this->name;
   }
 
-  // do zrobienia, funkcja ma zwracać tablicę komponentów z pliku
   public static function createFromFile($file) {
+    // do zrobienia, funkcja ma zwracać tablicę komponentów z pliku
     $components = [];
 
     if (! file_exists($file)) return false;
@@ -61,20 +48,15 @@ class Component extends BaseClass implements ComponentInterface {
     return $components;
   }
 
-  private function _set($type, $name, $amount) {
+  private function _set($type, $name) {
     $this->type = $type;
     $this->name = $name;
-    $this->amount = $amount;
   }
 
-  private static function _validate($type, $amount) {
-    if (! in_array($type, self::$types)) return false;
-    if ($amount < 1 || $amount > 99) return false;
-    return true;
+  private static function _validate($type) {
+    return in_array($type, self::$types);
   }
 
-  public function __destruct() {
-
-  }
+  public function __destruct() {}
 }
 ?>

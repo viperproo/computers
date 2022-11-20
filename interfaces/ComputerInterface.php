@@ -5,12 +5,12 @@
     public function show();
     public function getComponentsAmount();
     public function setName(string $name);
-    public function searchComponent($component);
-    public function addComponent($component);
+    public function searchComponent(Component $component);
+    public function addComponent(Component $component, int $amount);
     public function addComponents($components);
-    public function removeComponent($component);
+    public function removeComponent(Component|int $component);
     public function removeComponents($components);
-    public function removeComponentsInType($type);
-    public function clearComputer();
+    public function removeComponentsInType(string $type);
+    public function clearComponents();
   }
 ?>
